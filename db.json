@@ -1,14 +1,5 @@
 {
-  "events": [
-    {
-      "id": "1467",
-      "name": "Concert Jazz",
-      "category": "Musique",
-      "price": 100,
-      "image": "https://feverup.com/fr/casablanca/the-jazz-room?srsltid=AfmBOoqW89ahKaOMIJnmZkCVs-dbKFBEo6Q25zwC_UkzJVD9TBmEp5X5",
-      "description": "Concert Jazz a Casalbanca | The Jazz Room "
-    }
-  ],
+  "events": [],
   "orders": [],
   "messages": []
 }
