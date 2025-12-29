@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const AdminAddEvent = () => {
   // URL de l'API depuis le .env ou en dur si besoin
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://694d4617ad0f8c8e6e203fd2.mockapi.io/api/v1';
 
   const [formData, setFormData] = useState({
     name: '',

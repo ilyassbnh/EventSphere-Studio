@@ -3,7 +3,7 @@ import { Container, Table, Button, Image } from 'react-bootstrap';
 import axios from 'axios';
 
 const AdminDashboard = () => {
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://694d4617ad0f8c8e6e203fd2.mockapi.io/api/v1';
   const [events, setEvents] = useState([]);
 
   // Fetch events on load

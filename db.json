@@ -1,5 +1,62 @@
 {
-  "events": [],
+  "events": [
+    {
+      "id": "1",
+      "name": "Neon Music Festival",
+      "category": "Musique",
+      "price": 120,
+      "image": "https://images.unsplash.com/photo-1459749411177-334811adbced?auto=format&fit=crop&w=800&q=60",
+      "description": "Experience the biggest electronic music festival of the year with top DJs from around the world."
+    },
+    {
+      "id": "2",
+      "name": "Future Tech Summit 2025",
+      "category": "Tech",
+      "price": 250,
+      "image": "https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=800&q=60",
+      "description": "Join industry leaders to discuss AI, Blockchain, and the future of the web."
+    },
+    {
+      "id": "3",
+      "name": "Champions League Final",
+      "category": "Sport",
+      "price": 450,
+      "image": "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=800&q=60",
+      "description": "Watch the ultimate football showdown live at the grand stadium."
+    },
+    {
+      "id": "4",
+      "name": "Modern Art Exhibit",
+      "category": "Art",
+      "price": 45,
+      "image": "https://images.unsplash.com/photo-1518998053901-5348d3969105?auto=format&fit=crop&w=800&q=60",
+      "description": "A curated collection of contemporary abstract art and sculptures."
+    },
+    {
+      "id": "5",
+      "name": "Jazz & Wine Night",
+      "category": "Musique",
+      "price": 80,
+      "image": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=60",
+      "description": "Relaxing evening with smooth jazz performances and premium wine tasting."
+    },
+    {
+      "id": "6",
+      "name": "City Marathon",
+      "category": "Sport",
+      "price": 30,
+      "image": "https://images.unsplash.com/photo-1552674605-5d28c4e1902c?auto=format&fit=crop&w=800&q=60",
+      "description": "Join thousands of runners in the annual city charity marathon."
+    },
+    {
+      "id": "ed93",
+      "name": "Coupe du Monde",
+      "category": "Sport",
+      "price": 200,
+      "image": "data:image/jpeg;base64,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",
+      "description": "coupe du monde"
+    }
+  ],
   "orders": [],
   "messages": []
 }
