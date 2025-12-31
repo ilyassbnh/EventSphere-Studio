@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 import { Container, Table, Button, Image, Card } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AdminDashboard = () => {
   const API_URL = import.meta.env.VITE_API_URL || 'https://694d4617ad0f8c8e6e203fd2.mockapi.io/api/v1';
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate();
 
   // Fetch events on load
   useEffect(() => {
+    if (localStorage.getItem('isAdmin') !== 'true') {
+      navigate('/login');
+      return;
+    }
     fetchEvents();
-  }, []);
+  }, [navigate]);
 
   const fetchEvents = async () => {
     try {

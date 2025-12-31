@@ -1,9 +1,18 @@
 import { Navbar, Container, Nav, Badge, NavDropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const AppNavbar = () => {
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const location = useLocation(); // Forces re-render on route change (e.g. after login)
+  const navigate = useNavigate();
+
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAdmin');
+    navigate('/login');
+  };
 
   return (
     <>
@@ -67,17 +76,24 @@ const AppNavbar = () => {
             <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
             
             {/* Admin Dropdown */}
-            <NavDropdown 
-              title="Admin" 
-              id="admin-nav-dropdown" 
-              className="spatial-nav-dropdown"
-              menuVariant="dark"
-            >
-              <NavDropdown.Item as={Link} to="/admin/dashboard">Dashboard</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/admin/orders">Orders</NavDropdown.Item>
-              <NavDropdown.Divider style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
-              <NavDropdown.Item as={Link} to="/admin/add">Add Event</NavDropdown.Item>
-            </NavDropdown>
+              <NavDropdown 
+                title="Admin" 
+                id="admin-nav-dropdown" 
+                className="spatial-nav-dropdown"
+                menuVariant="dark"
+              >
+                <NavDropdown.Item as={Link} to="/admin/dashboard">Dashboard</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/admin/orders">Orders</NavDropdown.Item>
+                <NavDropdown.Divider style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+                <NavDropdown.Item as={Link} to="/admin/add">Add Event</NavDropdown.Item>
+                
+                {isAdmin && (
+                  <>
+                    <NavDropdown.Divider style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+                    <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                  </>
+                )}
+              </NavDropdown>
           </Nav>
           <Nav>
             <Nav.Link as={Link} to="/cart">

@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Container, Table, Badge, Card, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AdminOrders = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (localStorage.getItem('isAdmin') !== 'true') {
+      navigate('/login');
+      return;
+    }
     fetchOrders();
-  }, []);
+  }, [navigate]);
 
   const fetchOrders = async () => {
     try {
