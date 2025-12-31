@@ -34,7 +34,6 @@ const Events = () => {
   // Placeholder for Redux (Next Step)
   const handleAddToCart = (event) => {
     dispatch(addToCart(event));
-    alert(`${event.name} added to cart!`);
   };
   return (
     <div className="spatial-wrapper">

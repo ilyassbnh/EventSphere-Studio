@@ -22,10 +22,35 @@ const Checkout = () => {
   // Rediriger si le panier est vide (Sécurité)
   if (cart.items.length === 0) {
     return (
-      <Container className="py-5 text-center">
-        <h3>Votre panier est vide.</h3>
-        <Button variant="primary" onClick={() => navigate('/')}>Retour aux événements</Button>
-      </Container>
+      <div className="spatial-wrapper">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+          .spatial-wrapper {
+            background-color: #050505;
+            background-image: radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 25%), radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.15), transparent 25%);
+            min-height: 100vh;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            position: relative;
+          }
+          .spatial-btn {
+            background: #fff !important;
+            color: #000 !important;
+            border: none;
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+          }
+          .spatial-btn:hover { transform: scale(1.02); background: #f0f0f0 !important; }
+        `}</style>
+        <Container className="py-5 text-center position-relative" style={{ zIndex: 1 }}>
+          <h3 className="mb-4">Votre panier est vide.</h3>
+          <Button className="spatial-btn" onClick={() => navigate('/')}>Retour aux événements</Button>
+        </Container>
+      </div>
     );
   }
 
@@ -79,13 +104,93 @@ const Checkout = () => {
   };
 
   return (
-    <Container className="py-5">
-      <h2 className="mb-4">Finaliser la commande</h2>
-      <Row>
+    <div className="spatial-wrapper">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        .spatial-wrapper {
+          background-color: #050505;
+          background-image:
+            radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.15), transparent 25%);
+          min-height: 100vh;
+          color: #fff;
+          font-family: 'Space Grotesk', sans-serif;
+          padding-top: 4rem;
+          padding-bottom: 4rem;
+          position: relative;
+        }
+
+        .spatial-wrapper::before {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .glass-card {
+          background: rgba(255, 255, 255, 0.02);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 24px;
+          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        .kinetic-title {
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .spatial-input {
+          background: rgba(255, 255, 255, 0.03) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          color: #fff !important;
+          border-radius: 12px;
+          padding: 0.8rem 1rem;
+        }
+
+        .spatial-input:focus {
+          background: rgba(255, 255, 255, 0.08) !important;
+          border-color: rgba(255, 255, 255, 0.3) !important;
+          box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .spatial-btn {
+          background: #fff !important;
+          color: #000 !important;
+          border: none;
+          border-radius: 50px;
+          padding: 0.8rem 2rem;
+          font-weight: 600;
+          transition: transform 0.2s;
+        }
+
+        .spatial-btn:hover {
+          transform: scale(1.02);
+          background: #f0f0f0 !important;
+          color: #000 !important;
+        }
+
+        .spatial-wrapper .list-group-item {
+          background: transparent;
+          color: rgba(255, 255, 255, 0.7);
+          border-color: rgba(255, 255, 255, 0.1);
+          padding: 1rem 0;
+        }
+      `}</style>
+
+    <Container className="position-relative" style={{ zIndex: 1 }}>
+      <h2 className="mb-5 kinetic-title text-center">Finaliser la commande</h2>
+      <Row className="g-5">
         {/* Formulaire Client */}
         <Col md={7}>
-          <Card className="shadow-sm p-4 mb-4">
-            <h4 className="mb-3">Vos Coordonnées</h4>
+          <Card className="glass-card border-0 p-4">
+            <h4 className="mb-4 fw-bold">Vos Coordonnées</h4>
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Nom Complet</Form.Label>
@@ -96,6 +201,7 @@ const Checkout = () => {
                   onChange={handleChange} 
                   required 
                   placeholder="John Doe"
+                  className="spatial-input"
                 />
               </Form.Group>
 
@@ -108,6 +214,7 @@ const Checkout = () => {
                   onChange={handleChange} 
                   required 
                   placeholder="john@example.com"
+                  className="spatial-input"
                 />
               </Form.Group>
 
@@ -120,13 +227,13 @@ const Checkout = () => {
                   onChange={handleChange} 
                   required 
                   placeholder="+33 6 12 34 56 78"
+                  className="spatial-input"
                 />
               </Form.Group>
 
               <Button 
-                variant="success" 
                 type="submit" 
-                className="w-100 mt-3" 
+                className="w-100 mt-4 spatial-btn" 
                 size="lg"
                 disabled={isSubmitting}
               >
@@ -138,27 +245,28 @@ const Checkout = () => {
 
         {/* Résumé de la commande */}
         <Col md={5}>
-          <Card className="shadow-sm">
-            <Card.Header className="bg-light fw-bold">Résumé du Panier</Card.Header>
+          <Card className="glass-card border-0 p-4">
+            <h4 className="mb-4 fw-bold">Résumé du Panier</h4>
             <ListGroup variant="flush">
               {cart.items.map((item) => (
                 <ListGroup.Item key={item.id} className="d-flex justify-content-between align-items-center">
                   <div>
-                    <h6 className="my-0">{item.name}</h6>
-                    <small className="text-muted">Qté: {item.quantity} x ${item.price}</small>
+                    <h6 className="my-0 text-white">{item.name}</h6>
+                    <small className="text-white-50">Qté: {item.quantity} x ${item.price}</small>
                   </div>
-                  <span className="text-muted">${item.totalPrice}</span>
+                  <span className="fw-bold" style={{ color: '#00f260' }}>${item.totalPrice}</span>
                 </ListGroup.Item>
               ))}
-              <ListGroup.Item className="d-flex justify-content-between fw-bold bg-light">
-                <span>Total à payer</span>
-                <span>${cart.totalAmount}</span>
+              <ListGroup.Item className="d-flex justify-content-between fw-bold pt-4 border-top border-secondary border-opacity-25">
+                <span className="fs-5">Total à payer</span>
+                <span className="fs-4" style={{ color: '#00f260' }}>${cart.totalAmount}</span>
               </ListGroup.Item>
             </ListGroup>
           </Card>
         </Col>
       </Row>
     </Container>
+    </div>
   );
 };
 

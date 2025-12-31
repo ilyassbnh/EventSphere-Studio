@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Container, Table, Button, Image } from 'react-bootstrap';
+import { Container, Table, Button, Image, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -33,14 +34,91 @@ const AdminDashboard = () => {
   };
 
   return (
-    <Container className="mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Admin Dashboard - Products</h2>
-        <Button variant="success">Add New Event</Button> {/* Link will go here later */}
+    <div className="spatial-wrapper">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+
+        .spatial-wrapper {
+          background-color: #050505;
+          background-image:
+            radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.15), transparent 25%);
+          min-height: 100vh;
+          color: #fff;
+          font-family: 'Space Grotesk', sans-serif;
+          padding-top: 4rem;
+          padding-bottom: 4rem;
+          position: relative;
+        }
+
+        .spatial-wrapper::before {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .glass-card {
+          background: rgba(255, 255, 255, 0.02);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 24px;
+          box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+          overflow: hidden;
+        }
+
+        .kinetic-title {
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .table-spatial {
+          --bs-table-bg: transparent;
+          --bs-table-color: rgba(255, 255, 255, 0.8);
+          --bs-table-border-color: rgba(255, 255, 255, 0.1);
+          --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+          --bs-table-hover-color: #fff;
+        }
+
+        .table-spatial thead th {
+          background-color: rgba(255, 255, 255, 0.05);
+          color: #fff;
+          border-bottom-width: 1px;
+          font-weight: 500;
+        }
+
+        .spatial-btn {
+          background: #fff !important;
+          color: #000 !important;
+          border: none;
+          border-radius: 50px;
+          padding: 0.6rem 1.5rem;
+          font-weight: 600;
+          transition: transform 0.2s;
+          text-decoration: none;
+        }
+
+        .spatial-btn:hover {
+          transform: scale(1.05);
+          background: #f0f0f0 !important;
+          color: #000 !important;
+        }
+      `}</style>
+
+    <Container className="position-relative" style={{ zIndex: 1 }}>
+      <div className="d-flex justify-content-between align-items-center mb-5">
+        <h2 className="kinetic-title">Admin Dashboard - Products</h2>
+        <Button as={Link} to="/admin/add" className="spatial-btn">Add New Event</Button>
       </div>
 
-      <Table striped bordered hover responsive>
-        <thead className="table-dark">
+      <Card className="glass-card border-0">
+      <Table responsive hover className="mb-0 table-spatial">
+        <thead>
           <tr>
             <th>Image</th>
             <th>Name</th>
@@ -57,13 +135,13 @@ const AdminDashboard = () => {
                   <Image 
                     src={event.image} 
                     alt={event.name} 
-                    style={{ width: '50px', height: '50px', objectFit: 'cover' }} 
+                    style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '8px' }} 
                     rounded 
                   />
                 </td>
-                <td>{event.name}</td>
+                <td className="fw-bold">{event.name}</td>
                 <td>{event.category}</td>
-                <td>${event.price}</td>
+                <td style={{ color: '#00f260', fontWeight: 'bold' }}>${event.price}</td>
                 <td>
                   <Button 
                     variant="danger" 
@@ -82,7 +160,9 @@ const AdminDashboard = () => {
           )}
         </tbody>
       </Table>
+      </Card>
     </Container>
+    </div>
   );
 };
 
