@@ -6,20 +6,32 @@ import Events from './pages/public/Events';
 import Cart from './pages/public/Cart';
 import AdminAddEvent from './pages/admin/AdminAddEvent';
 import AdminDashboard from './pages/admin/AdminDashboard';
-import Checkout from './pages/public/Checkout'; 
+import Checkout from './pages/public/Checkout';
+import AdminOrders from './pages/admin/AdminOrders';
+import Login from './pages/public/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
     <Router>
       <AppNavbar /> {/* Always visible */}
-      
+
       <Routes>
+        {/* --- ROUTES PUBLIQUES --- */}
         <Route path="/" element={<Events />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/admin/add" element={<AdminAddEvent />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/checkout" element={<Checkout />} />
-      </Routes>
+        <Route path="/login" element={<Login />} />
+
+        {/* --- ROUTES PROTÉGÉES (ADMIN) --- */}
+        {/* Tout ce bloc doit être DANS <Routes> */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/add" element={<AdminAddEvent />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
+        </Route>
+
+      </Routes> {/* <--- On ferme Routes ICI, pas avant */}
     </Router>
   );
 }

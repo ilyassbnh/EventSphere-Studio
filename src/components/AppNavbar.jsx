@@ -16,6 +16,8 @@ const AppNavbar = () => {
             <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
             {/* Admin Links for testing */}
             <Nav.Link as={Link} to="/admin/dashboard" className="text-warning">Admin</Nav.Link>
+            <Nav.Link as={Link} to="/admin/dashboard" className="text-warning">Admin Produits</Nav.Link>
+            <Nav.Link as={Link} to="/admin/orders" className="text-warning">Admin Commandes</Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link as={Link} to="/cart">
