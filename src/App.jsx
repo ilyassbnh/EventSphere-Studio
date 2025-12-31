@@ -10,6 +10,7 @@ import Checkout from './pages/public/Checkout';
 import AdminOrders from './pages/admin/AdminOrders';
 import Login from './pages/public/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import Contact from './pages/public/Contact';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* --- ROUTES PROTÉGÉES (ADMIN) --- */}
         {/* Tout ce bloc doit être DANS <Routes> */}
