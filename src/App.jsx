@@ -6,7 +6,7 @@ import Events from './pages/public/Events';
 import Cart from './pages/public/Cart';
 import AdminAddEvent from './pages/admin/AdminAddEvent';
 import AdminDashboard from './pages/admin/AdminDashboard';
-// import Checkout from './pages/public/Checkout'; // We will build this next
+import Checkout from './pages/public/Checkout'; 
 
 function App() {
   return (
@@ -14,13 +14,11 @@ function App() {
       <AppNavbar /> {/* Always visible */}
       
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<Events />} />
         <Route path="/cart" element={<Cart />} />
-        
-        {/* Admin Routes */}
         <Route path="/admin/add" element={<AdminAddEvent />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </Router>
   );
