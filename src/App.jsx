@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AppNavbar from './components/AppNavbar';
 
 // Import Pages
+import Home from './pages/public/Home';
 import Events from './pages/public/Events';
 import Cart from './pages/public/Cart';
 import AdminAddEvent from './pages/admin/AdminAddEvent';
@@ -19,7 +20,8 @@ function App() {
 
       <Routes>
         {/* --- ROUTES PUBLIQUES --- */}
-        <Route path="/" element={<Events />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/events" element={<Events />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/login" element={<Login />} />
