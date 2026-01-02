@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/cartSlice';
+import { addToCart } from '../../redux/cartSlice'; // Check your path
 import axios from 'axios';
+import EventCard from '../../components/EventCard';// Import the new component
 
-const Events = () => {
-  // CHANGED: Direct link to MockAPI (removed trailing slash for safety)
+const Events = ({ onEdit }) => { // Accepts onEdit from App.jsx
   const API_URL = 'https://694d4617ad0f8c8e6e203fd2.mockapi.io/api/v1';
   const dispatch = useDispatch();
   const [events, setEvents] = useState([]);
@@ -31,12 +31,13 @@ const Events = () => {
     }
   }, [category, events]);
 
-  // Placeholder for Redux (Next Step)
   const handleAddToCart = (event) => {
     dispatch(addToCart(event));
   };
+
   return (
     <div className="spatial-wrapper">
+      {/* GLOBAL STYLES (Passed down to EventCard via CSS classes) */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
 
@@ -124,6 +125,7 @@ const Events = () => {
           box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
+        /* CARD STYLES (Used by EventCard.jsx) */
         .bento-card {
           background: rgba(255, 255, 255, 0.02);
           backdrop-filter: blur(20px);
@@ -213,33 +215,12 @@ const Events = () => {
         <Row xs={1} md={2} lg={3} className="g-4">
           {filteredEvents.map((event) => (
             <Col key={event.id}>
-              <div className="bento-card d-flex flex-column">
-                <div className="card-img-wrapper">
-                  <img
-                    src={event.image}
-                    alt={event.name}
-                    onError={(e) => e.target.src = 'https://via.placeholder.com/400x300/1a1a1a/ffffff?text=Event'}
-                  />
-                  <span className="category-badge">{event.category}</span>
-                </div>
-                
-                <div className="p-4 d-flex flex-column flex-grow-1">
-                  <h3 className="fw-bold mb-2 text-white" style={{ fontSize: '1.5rem' }}>{event.name}</h3>
-                  <p className="text-white-50 small mb-4 flex-grow-1">
-                    {event.description ? event.description.substring(0, 100) : "No description available"}...
-                  </p>
-                  
-                  <div className="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-secondary border-opacity-25">
-                    <span className="price-tag">${event.price}</span>
-                    <button 
-                      className="action-btn"
-                      onClick={() => handleAddToCart(event)}
-                    >
-                      Get Ticket
-                    </button>
-                  </div>
-                </div>
-              </div>
+              {/* Render the separated Card Component */}
+              <EventCard 
+                event={event} 
+                onAddToCart={handleAddToCart}
+                onEdit={onEdit} 
+              />
             </Col>
           ))}
         </Row>
