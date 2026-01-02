@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Table, Button, Image, Card } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -8,7 +8,7 @@ const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch events on load
+  // 1. Fetch events on load & Check Auth
   useEffect(() => {
     if (localStorage.getItem('isAdmin') !== 'true') {
       navigate('/login');
@@ -26,11 +26,21 @@ const AdminDashboard = () => {
     }
   };
 
+  // 2. Handle Edit Click - Sends data to the Form Page
+  const handleEdit = (event) => {
+    navigate('/admin/add', { state: { eventToEdit: event } });
+  };
+
+  // 3. Handle Add New Click - Sends NULL so form is empty
+  const handleAddNew = () => {
+    navigate('/admin/add', { state: { eventToEdit: null } });
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       try {
         await axios.delete(`${API_URL}/events/${id}`);
-        // Remove from UI without reloading
+        // Remove from UI immediately
         setEvents(events.filter(event => event.id !== id));
       } catch (error) {
         console.error("Error deleting event:", error);
@@ -105,7 +115,6 @@ const AdminDashboard = () => {
           padding: 0.6rem 1.5rem;
           font-weight: 600;
           transition: transform 0.2s;
-          text-decoration: none;
         }
 
         .spatial-btn:hover {
@@ -117,8 +126,10 @@ const AdminDashboard = () => {
 
     <Container className="position-relative" style={{ zIndex: 1 }}>
       <div className="d-flex justify-content-between align-items-center mb-5">
-        <h2 className="kinetic-title">Admin Dashboard - Products</h2>
-        <Button as={Link} to="/admin/add" className="spatial-btn">Add New Event</Button>
+        <h2 className="kinetic-title">Admin Dashboard</h2>
+        <Button onClick={handleAddNew} className="spatial-btn">
+          + Add New Event
+        </Button>
       </div>
 
       <Card className="glass-card border-0">
@@ -136,31 +147,46 @@ const AdminDashboard = () => {
           {events.length > 0 ? (
             events.map((event) => (
               <tr key={event.id}>
-                <td>
+                <td style={{verticalAlign: 'middle'}}>
                   <Image 
                     src={event.image} 
                     alt={event.name} 
                     style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '8px' }} 
                     rounded 
+                    onError={(e) => e.target.src = 'https://via.placeholder.com/50'}
                   />
                 </td>
-                <td className="fw-bold">{event.name}</td>
-                <td>{event.category}</td>
-                <td style={{ color: '#00f260', fontWeight: 'bold' }}>${event.price}</td>
-                <td>
+                <td className="fw-bold" style={{verticalAlign: 'middle'}}>{event.name}</td>
+                <td style={{verticalAlign: 'middle'}}>{event.category}</td>
+                <td style={{ color: '#00f260', fontWeight: 'bold', verticalAlign: 'middle' }}>${event.price}</td>
+                <td style={{verticalAlign: 'middle'}}>
+                  
+                  {/* EDIT BUTTON */}
+                  <Button 
+                    variant="warning" 
+                    size="sm" 
+                    className="me-2"
+                    style={{ borderRadius: '50px', padding: '0.4rem 1rem', fontWeight: 'bold', fontSize: '0.8rem' }}
+                    onClick={() => handleEdit(event)}
+                  >
+                    Edit
+                  </Button>
+
+                  {/* DELETE BUTTON */}
                   <Button 
                     variant="danger" 
-                    size="sm" 
+                    size="sm"
+                    style={{ borderRadius: '50px', padding: '0.4rem 1rem', fontWeight: 'bold', fontSize: '0.8rem' }} 
                     onClick={() => handleDelete(event.id)}
                   >
-                    <i className="bi bi-trash"></i> Delete
+                    Delete
                   </Button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center">No events found.</td>
+              <td colSpan="5" className="text-center py-4">No events found. Start by adding one!</td>
             </tr>
           )}
         </tbody>

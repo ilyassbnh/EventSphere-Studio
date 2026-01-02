@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Form, Button, Container, Card, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Form, Button, Container, Card, Alert, Spinner } from 'react-bootstrap';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const AdminAddEvent = () => {
-  // URL de l'API depuis le .env ou en dur si besoin
   const API_URL = import.meta.env.VITE_API_URL || 'https://694d4617ad0f8c8e6e203fd2.mockapi.io/api/v1';
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 1. Check if we are editing an existing event
+  const eventToEdit = location.state?.eventToEdit;
 
   useEffect(() => {
     if (localStorage.getItem('isAdmin') !== 'true') {
@@ -14,37 +17,74 @@ const AdminAddEvent = () => {
     }
   }, [navigate]);
 
+  // 2. Initialize State (Empty if new, populated if editing)
   const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: '',
-    image: '', // On stocke une URL d'image pour l'instant
-    description: ''
+    name: eventToEdit?.name || '',
+    category: eventToEdit?.category || '',
+    price: eventToEdit?.price || '',
+    image: eventToEdit?.image || '', 
+    description: eventToEdit?.description || ''
   });
 
-  const [status, setStatus] = useState(null); // 'success' | 'error' | null
+  const [status, setStatus] = useState(null); 
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // 3. Cloudinary Upload Logic (Re-integrated)
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "EventSphere");
+    data.append("cloud_name", "dtpjdj7m4"); 
+
+    try {
+      const res = await fetch("https://api.cloudinary.com/v1_1/dtpjdj7m4/image/upload", {
+        method: "POST",
+        body: data,
+      });
+      const fileData = await res.json();
+      
+      if (fileData.secure_url) {
+        setFormData((prev) => ({ ...prev, image: fileData.secure_url }));
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      setStatus('error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Conversion du prix en nombre
       const payload = { ...formData, price: Number(formData.price) };
       
-      await axios.post(`${API_URL}/events`, payload);
+      if (eventToEdit) {
+        // 4. If Editing -> Update (PUT)
+        await axios.put(`${API_URL}/events/${eventToEdit.id}`, payload);
+      } else {
+        // 5. If New -> Create (POST)
+        await axios.post(`${API_URL}/events`, payload);
+      }
       
       setStatus('success');
-      // Reset du formulaire
-      setFormData({ name: '', category: '', price: '', image: '', description: '' });
       
-      // Enlever le message de succès après 3 secondes
-      setTimeout(() => setStatus(null), 3000);
+      // Delay redirect so user sees success message
+      setTimeout(() => {
+        setStatus(null);
+        navigate('/admin/dashboard'); 
+      }, 1500);
       
     } catch (error) {
-      console.error("Erreur lors de l'ajout", error);
+      console.error("Erreur", error);
       setStatus('error');
     }
   };
@@ -134,10 +174,12 @@ const AdminAddEvent = () => {
 
     <Container className="position-relative" style={{ zIndex: 1, maxWidth: '600px' }}>
       <Card className="glass-card p-4 border-0">
-        <h2 className="text-center mb-4 kinetic-title">Ajouter un Événement</h2>
+        <h2 className="text-center mb-4 kinetic-title">
+          {eventToEdit ? "Modifier l'Événement" : "Ajouter un Événement"}
+        </h2>
         
-        {status === 'success' && <Alert variant="success">Événement ajouté avec succès !</Alert>}
-        {status === 'error' && <Alert variant="danger">Erreur lors de l'ajout.</Alert>}
+        {status === 'success' && <Alert variant="success">Opération réussie ! Redirection...</Alert>}
+        {status === 'error' && <Alert variant="danger">Une erreur est survenue.</Alert>}
 
         <Form onSubmit={handleSubmit}>
           
@@ -179,16 +221,30 @@ const AdminAddEvent = () => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>URL de l'image</Form.Label>
+            <Form.Label>Image de l'événement</Form.Label>
+            
+            {/* FILE INPUT FOR CLOUDINARY */}
             <Form.Control 
-              type="url" 
-              name="image" 
-              value={formData.image} 
-              onChange={handleChange} 
-              required 
-              placeholder="https://example.com/image.jpg"
-              className="spatial-input"
+              type="file" 
+              accept="image/*"
+              onChange={handleImageUpload} 
+              disabled={uploading}
+              required={!formData.image} // Only required if no image exists yet
+              className="spatial-input mb-2"
             />
+            
+            {uploading && <div className="text-light"><Spinner size="sm" animation="border" /> Téléchargement...</div>}
+
+            {/* PREVIEW IMAGE */}
+            {formData.image && (
+              <div className="mt-2">
+                <img 
+                  src={formData.image} 
+                  alt="Aperçu" 
+                  style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px' }} 
+                />
+              </div>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -204,9 +260,19 @@ const AdminAddEvent = () => {
             />
           </Form.Group>
 
-          <Button variant="primary" type="submit" className="w-100 spatial-btn">
-            Enregistrer l'événement
+          <Button variant="primary" type="submit" className="w-100 spatial-btn" disabled={uploading}>
+            {eventToEdit ? "Mettre à jour" : "Enregistrer l'événement"}
           </Button>
+
+          {/* Cancel Button */}
+          <Button 
+            variant="link" 
+            className="w-100 mt-2 text-white text-decoration-none" 
+            onClick={() => navigate('/admin/dashboard')}
+          >
+            Annuler
+          </Button>
+
         </Form>
       </Card>
     </Container>
